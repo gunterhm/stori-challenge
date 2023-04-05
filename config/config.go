@@ -17,7 +17,7 @@ type Configurations struct {
 // SmptConfigurations SMPT configurations
 type SmptConfigurations struct {
 	Host     string `koanf:"host"`
-	Port     string `koanf:"port"`
+	Port     int    `koanf:"port"`
 	User     string `koanf:"user"`
 	Password string `koanf:"password"`
 	From     string `koanf:"from"`
