@@ -4,3 +4,6 @@ smtp:
   user: gunter@sandboxfe3907610f5c4d15bcf84655631ea2f9.mailgun.org
   password:
   from: gunter@guntercorp.com
+
+database:
+  dsn: stori:1q2w3e@tcp(localhost:3306)/storidb

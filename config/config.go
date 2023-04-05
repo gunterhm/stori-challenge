@@ -11,7 +11,8 @@ import (
 
 // Configurations Application wide configurations
 type Configurations struct {
-	Smtp SmptConfigurations `koanf:"smtp"`
+	Smtp     SmptConfigurations     `koanf:"smtp"`
+	Database DatabaseConfigurations `koanf:"database"`
 }
 
 // SmptConfigurations SMPT configurations
@@ -21,6 +22,11 @@ type SmptConfigurations struct {
 	User     string `koanf:"user"`
 	Password string `koanf:"password"`
 	From     string `koanf:"from"`
+}
+
+// DatabaseConfigurations Database configurations
+type DatabaseConfigurations struct {
+	Dsn string `koanf:"dsn"`
 }
 
 // LoadConfig Loads configurations depending upon the environment

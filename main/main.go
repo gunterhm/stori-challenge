@@ -3,7 +3,10 @@ package main
 import (
 	"awesomeProject/config"
 	"awesomeProject/model"
-	"awesomeProject/service/mail"
+	"database/sql"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/uptrace/bun"
+	"github.com/uptrace/bun/dialect/mysqldialect"
 )
 
 func main() {
@@ -14,8 +17,19 @@ func main() {
 	// Configs
 	configs := config.LoadConfig(logger)
 
+	// Database
+	sqlDb, err := sql.Open("mysql", configs.Database.Dsn)
+	if err != nil {
+		logger.Error("Connection to database failed: %v", err)
+	}
+	defer sqlDb.Close()
+
+	logger.Info("Connected to Database!")
+
+	_ = bun.NewDB(sqlDb, mysqldialect.New())
+
 	// Services
-	mailSvc := mail.NewDefaultService(logger, &configs.Smtp)
+	//mailSvc := mail.NewDefaultService(logger, &configs.Smtp)  TODO GUNTER TO UNCOMMENT
 
 	var arrTxnCountPerMonth = []model.TxnCountPerMonth{
 		{
@@ -40,30 +54,10 @@ func main() {
 		ArrTxnCountPerMonth: arrTxnCountPerMonth,
 	}
 
-	err := mailSvc.SendMail("gunterhm@gmail.com", summaryEmailData)
+	logger.Infof("Summary Email Data: %v", summaryEmailData)
+
+	/*err = mailSvc.SendMail("gunterhm@gmail.com", summaryEmailData)  TODO GUNTER TO UNCOMENT
 	if err != nil {
 		return
-	}
+	}*/
 }
-
-/*func send(body string) {
-	from := "gunterhm@gmail.com"
-	pass := "rpnsgjmpgemiopna"
-	to := "gunterhm@gmail.com"
-
-	msg := "From: " + from + "\n" +
-		"To: " + to + "\n" +
-		"Subject: Hello there\n\n" +
-		body
-
-	err := smtp.SendMail("smtp.gmail.com:587",
-		smtp.PlainAuth("", from, pass, "smtp.gmail.com"),
-		from, []string{to}, []byte(msg))
-
-	if err != nil {
-		log.Printf("smtp error: %s", err)
-		return
-	}
-
-	log.Print("sent, visit http://foobarbazz.mailinator.com")
-}*/
