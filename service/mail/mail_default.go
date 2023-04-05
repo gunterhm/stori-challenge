@@ -53,7 +53,7 @@ func (s DefaultService) SendMail(to string, summaryEmailData model.SummaryEmail)
 		buffer.String()
 
 	err = smtp.SendMail(s.smtpConfig.Host+":"+s.smtpConfig.Port,
-		smtp.PlainAuth("", s.smtpConfig.From, s.smtpConfig.Password, s.smtpConfig.Host),
+		smtp.PlainAuth("", s.smtpConfig.User, s.smtpConfig.Password, s.smtpConfig.Host),
 		s.smtpConfig.From, []string{to}, []byte(msg))
 
 	if err != nil {

@@ -1,5 +1,6 @@
 smtp:
-  host: smtp.gmail.com
-  port: 587
-  password: rpnsgjmpgemiopna
-  from: gunterhm@gmail.com
+  host: smtp.mailgun.org
+  port: 25
+  user: gunter@sandboxfe3907610f5c4d15bcf84655631ea2f9.mailgun.org
+  password:
+  from: gunter@guntercorp.com
