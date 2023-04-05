@@ -1,5 +1,5 @@
 smtp:
   host: smtp.gmail.com
   port: 587
-  password:
+  password: rpnsgjmpgemiopna
   from: gunterhm@gmail.com

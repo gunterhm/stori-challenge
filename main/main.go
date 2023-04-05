@@ -32,7 +32,15 @@ func main() {
 		},
 	}
 
-	err := mailSvc.SendMail("gunterhm@gmail.com", arrTxnCountPerMonth)
+	var summaryEmailData = model.SummaryEmail{
+		AccountNumber:       "GHM09238458",
+		TotalBalance:        540.8,
+		AverageCreditAmount: 105.5,
+		AverageDebitAmount:  -56.3,
+		ArrTxnCountPerMonth: arrTxnCountPerMonth,
+	}
+
+	err := mailSvc.SendMail("gunterhm@gmail.com", summaryEmailData)
 	if err != nil {
 		return
 	}

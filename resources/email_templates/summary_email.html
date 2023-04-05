@@ -5,10 +5,10 @@
     <title>Summary</title>
     <style>
         .center {
-            margin: 0px auto;
+            margin: 0 auto;
             width: 700px;
             height: 1500px;
-            border: 10px solid #4CEFD8;
+            border: 10px solid #2CCFB8;
             padding: 25px;
             background-color: #FFFFFF;
         }
@@ -17,7 +17,7 @@
             font-family: sans-serif;
             font-size: 1.4em;
             font-weight: 400;
-            background-color: #4CEFD8;
+            background-color: #2CCFB8;
             height: 100%
         }
 
@@ -33,9 +33,26 @@
     <img alt="stori logo" src="https://stori-challenge.s3.amazonaws.com/stori-logo.png">
     <div style="margin:30px">
         <p class="stori-title">Account Summary</p>
-        <p>Summary for Account Number: <strong>123456</strong></p>
+        <p>Summary for Account Number: <strong>{{.AccountNumber}}</strong></p>
         <table>
-            {{range .}}
+            <tr>
+                <td>Total balance is</td>
+                <td><strong>{{.TotalBalance}}</strong></td>
+            </tr>
+            <tr>
+                <td>Average debit amount:</td>
+                <td><strong>{{.AverageDebitAmount}}</strong></td>
+            </tr>
+            <tr>
+                <td>Average credit amount:</td>
+                <td><strong>{{.AverageCreditAmount}}</strong></td>
+            </tr>
+        </table>
+
+        <br>
+
+        <table>
+            {{range .ArrTxnCountPerMonth}}
             <tr>
                 <td>Number of transactions in {{.Month}}:</td>
                 <td><strong>{{.TxnCount}}</strong></td>

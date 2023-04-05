@@ -24,7 +24,7 @@ func NewDefaultService(logger *zap.SugaredLogger, smtpConf *config.SmptConfigura
 	}
 }
 
-func (s DefaultService) SendMail(to string, txnCntPerMonth []model.TxnCountPerMonth) error {
+func (s DefaultService) SendMail(to string, summaryEmailData model.SummaryEmail) error {
 	//template, err := file.Provider("resources/email_templates/summary_email.html").ReadBytes()
 
 	tmpl, err := template.ParseFiles("resources/email_templates/summary_email.html")
@@ -36,7 +36,7 @@ func (s DefaultService) SendMail(to string, txnCntPerMonth []model.TxnCountPerMo
 	var buffer bytes.Buffer
 	writer := bufio.NewWriter(&buffer)
 
-	err = tmpl.Execute(writer, txnCntPerMonth)
+	err = tmpl.Execute(writer, summaryEmailData)
 	if err != nil {
 		return err
 	}
