@@ -78,6 +78,7 @@ func (r *DatabaseRepository) FindTotalTransactionsPerMonth(ctx context.Context, 
 		Where("account_id = ?", accountID).
 		Where("YEAR(date) = YEAR(CURDATE())").
 		GroupExpr("MONTH(date)").
+		OrderExpr("txn_month ASC").
 		Scan(ctx, &txnCountPerMonth)
 
 	if err != nil {
@@ -85,4 +86,22 @@ func (r *DatabaseRepository) FindTotalTransactionsPerMonth(ctx context.Context, 
 	}
 
 	return txnCountPerMonth, nil
+}
+
+func (r *DatabaseRepository) FindTotalBalance(ctx context.Context, accountID string) (float64, error) {
+
+	var totalBalance float64
+
+	err := r.db.NewSelect().
+		Model((*model.AccountTransaction)(nil)).
+		ColumnExpr("SUM(amount_credit) + SUM(amount_debit) AS total_balance").
+		Where("account_id = ?", accountID).
+		Where("YEAR(date) = YEAR(CURDATE())").
+		Scan(ctx, &totalBalance)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return totalBalance, nil
 }

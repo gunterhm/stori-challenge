@@ -31,15 +31,24 @@
 <body class="stori-bkg">
 <div class="center">
     <img src="cid:stori-logo.png" alt="Stori logo" />
-    <!--img alt="stori logo" src="https://stori-challenge.s3.amazonaws.com/stori-logo.png"-->
     <div style="margin:30px">
         <p class="stori-title">Account Summary</p>
+
         <p>Summary for Account Number: <strong>{{.AccountNumber}}</strong></p>
+        <p>Customer name: <strong>{{.CustomerName}}</strong></p>
+
+        <br>
+
         <table>
             <tr>
                 <td>Total balance is</td>
                 <td><strong>{{.TotalBalance}}</strong></td>
             </tr>
+        </table>
+
+        <br>
+
+        <table>
             <tr>
                 <td>Average debit amount:</td>
                 <td><strong>{{.AverageDebitAmount}}</strong></td>

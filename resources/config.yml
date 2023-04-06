@@ -7,3 +7,8 @@ smtp:
 
 database:
   dsn: stori:1q2w3e@tcp(localhost:3306)/storidb
+
+txnprocessing:
+  incomingdir: /Users/gunter/stori/incoming
+  archivedir: /Users/gunter/stori/archive
+  filenameregexp: \d\d\d\d\d\d\d\d_([a-zA-Z0-9]+)\.csv

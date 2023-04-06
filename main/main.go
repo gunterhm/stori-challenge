@@ -2,15 +2,14 @@ package main
 
 import (
 	"awesomeProject/config"
-	"awesomeProject/repository/accountrepo"
-	"awesomeProject/service/mail"
-	"awesomeProject/service/report"
-	"context"
+	"awesomeProject/service/txnprocessor"
 	"database/sql"
+	"github.com/go-co-op/gocron"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/mysqldialect"
 	"github.com/uptrace/bun/extra/bundebug"
+	"time"
 )
 
 func main() {
@@ -34,12 +33,30 @@ func main() {
 	db.AddQueryHook(bundebug.NewQueryHook(bundebug.WithVerbose(true)))
 
 	// Repositories
+	/* TODO GUNTER TO UNCOMMENT
 	repoAccount := accountrepo.NewDatabaseRepository(logger, db)
+	*/
 
 	// Services
+	/* TODO GUNTER TO UNCOMMENT
 	reportSvc := report.NewDefaultService(logger, repoAccount)
 	mailSvc := mail.NewDefaultService(logger, &configs.Smtp)
+	*/
+	txnProcessorSvc := txnprocessor.NewDefaultService(logger, configs.TxnProcessing.FileNameRegExp,
+		configs.TxnProcessing.IncomingDir, configs.TxnProcessing.ArchiveDir)
 
+	// Go Cron
+	scheduler := gocron.NewScheduler(time.UTC)
+
+	scheduler.Every(5).Seconds().
+		Do(func() { logger.Infof("TICK!!!!") })
+
+	err = txnProcessorSvc.StartProcess()
+	if err != nil {
+		logger.Errorf("Error while calling StartProcess: %v", err)
+	}
+
+	/*  TODO GUNTER TO UNCOMMENT
 	summaryEmailInfo, err := reportSvc.GetSummaryEmailInfo(context.Background(), "GHM54789345")
 	if err != nil {
 		return
@@ -47,8 +64,10 @@ func main() {
 
 	logger.Infof("Summary Email info %v", summaryEmailInfo)
 
-	err = mailSvc.SendMail("gunterhm@gmail.com", summaryEmailInfo)
+	err = mailSvc.SendSummaryMail(summaryEmailInfo)
 	if err != nil {
 		return
-	}
+	}*/
+
+	scheduler.StartBlocking()
 }

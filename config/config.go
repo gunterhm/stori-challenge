@@ -11,8 +11,9 @@ import (
 
 // Configurations Application wide configurations
 type Configurations struct {
-	Smtp     SmptConfigurations     `koanf:"smtp"`
-	Database DatabaseConfigurations `koanf:"database"`
+	Smtp          SmptConfigurations          `koanf:"smtp"`
+	Database      DatabaseConfigurations      `koanf:"database"`
+	TxnProcessing TxnProcessingConfigurations `koanf:"txnprocessing"`
 }
 
 // SmptConfigurations SMPT configurations
@@ -27,6 +28,13 @@ type SmptConfigurations struct {
 // DatabaseConfigurations Database configurations
 type DatabaseConfigurations struct {
 	Dsn string `koanf:"dsn"`
+}
+
+// TxnProcessingConfigurations Transaction Processing configurations
+type TxnProcessingConfigurations struct {
+	IncomingDir    string `koanf:"incomingdir"`
+	ArchiveDir     string `koanf:"archivedir"`
+	FileNameRegExp string `koanf:"filenameregexp"`
 }
 
 // LoadConfig Loads configurations depending upon the environment

@@ -24,7 +24,7 @@ func NewDefaultService(logger *zap.SugaredLogger, smtpConf *config.SmptConfigura
 	}
 }
 
-func (s DefaultService) SendMail(to string, summaryEmailData *model.SummaryEmail) error {
+func (s DefaultService) SendSummaryMail(summaryEmailData *model.SummaryEmail) error {
 	tmpl, err := template.ParseFiles("resources/email_templates/summary_email.html")
 	if err != nil {
 		return err
@@ -45,7 +45,7 @@ func (s DefaultService) SendMail(to string, summaryEmailData *model.SummaryEmail
 
 	mail := gomail.NewMessage()
 	mail.SetHeader("From", s.smtpConfig.From)
-	mail.SetHeader("To", to)
+	mail.SetHeader("To", summaryEmailData.Email)
 	mail.SetHeader("Subject", "Account Summary")
 	mail.SetBody("text/html", buffer.String())
 	mail.Embed("resources/stori-logo.png")
@@ -58,7 +58,7 @@ func (s DefaultService) SendMail(to string, summaryEmailData *model.SummaryEmail
 	// Send the email
 	if err := d.DialAndSend(mail); err != nil {
 		return err
-	}*/
+	} */
 
 	return nil
 }

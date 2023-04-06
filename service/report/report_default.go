@@ -37,8 +37,16 @@ func (s DefaultService) GetSummaryEmailInfo(ctx context.Context, accountID strin
 		return nil, err
 	}
 
+	totalBalance, err := s.accountRepo.FindTotalBalance(ctx, accountID)
+	if err != nil {
+		return nil, err
+	}
+
 	summaryEmail := model.SummaryEmail{
 		AccountNumber:       account.AccountID,
+		CustomerName:        account.Name,
+		Email:               account.Email,
+		TotalBalance:        totalBalance,
 		AverageCreditAmount: averageCredit,
 		AverageDebitAmount:  averageDebit,
 		ArrTxnCountPerMonth: arrTxnCountPerMonth,
