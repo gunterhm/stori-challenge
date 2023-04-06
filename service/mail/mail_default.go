@@ -24,46 +24,7 @@ func NewDefaultService(logger *zap.SugaredLogger, smtpConf *config.SmptConfigura
 	}
 }
 
-/*func (s DefaultService) SendMailOld(to string, summaryEmailData model.SummaryEmail) error {
-	//template, err := file.Provider("resources/email_templates/summary_email.html").ReadBytes()
-
-	tmpl, err := template.ParseFiles("resources/email_templates/summary_email.html")
-
-	if err != nil {
-		return err
-	}
-
-	var buffer bytes.Buffer
-	writer := bufio.NewWriter(&buffer)
-
-	err = tmpl.Execute(writer, summaryEmailData)
-	if err != nil {
-		return err
-	}
-
-	err = writer.Flush() // forcefully write remaining
-	if err != nil {
-		return err
-	}
-
-	msg := "From: " + s.smtpConfig.From + "\n" +
-		"To: " + to + "\n" +
-		"Subject: Hello there\n" +
-		"MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n" +
-		buffer.String()
-
-	err = smtp.SendMail(s.smtpConfig.Host+":"+string(s.smtpConfig.Port),
-		smtp.PlainAuth("", s.smtpConfig.User, s.smtpConfig.Password, s.smtpConfig.Host),
-		s.smtpConfig.From, []string{to}, []byte(msg))
-
-	if err != nil {
-		return err
-	} else {
-		return nil
-	}
-}*/
-
-func (s DefaultService) SendMail(to string, summaryEmailData model.SummaryEmail) error {
+func (s DefaultService) SendMail(to string, summaryEmailData *model.SummaryEmail) error {
 	tmpl, err := template.ParseFiles("resources/email_templates/summary_email.html")
 	if err != nil {
 		return err
@@ -72,7 +33,7 @@ func (s DefaultService) SendMail(to string, summaryEmailData model.SummaryEmail)
 	var buffer bytes.Buffer
 	writer := bufio.NewWriter(&buffer)
 
-	err = tmpl.Execute(writer, summaryEmailData)
+	err = tmpl.Execute(writer, *summaryEmailData)
 	if err != nil {
 		return err
 	}
@@ -89,12 +50,15 @@ func (s DefaultService) SendMail(to string, summaryEmailData model.SummaryEmail)
 	mail.SetBody("text/html", buffer.String())
 	mail.Embed("resources/stori-logo.png")
 
+	s.log.Infof("EMail: %s", buffer.String())
+
+	/* TODO GUNTER TO UNCOMMENT
 	d := gomail.NewDialer(s.smtpConfig.Host, s.smtpConfig.Port, s.smtpConfig.User, s.smtpConfig.Password)
 
 	// Send the email
 	if err := d.DialAndSend(mail); err != nil {
 		return err
-	}
+	}*/
 
 	return nil
 }

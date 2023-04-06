@@ -1,4 +1,4 @@
--- storidb.account definition
+-- storidb.accountrepo definition
 
 CREATE TABLE `account` (
                            `account_id` varchar(20) NOT NULL,

@@ -2,8 +2,9 @@ package main
 
 import (
 	"awesomeProject/config"
-	"awesomeProject/model"
-	"awesomeProject/repository/account"
+	"awesomeProject/repository/accountrepo"
+	"awesomeProject/service/mail"
+	"awesomeProject/service/report"
 	"context"
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
@@ -33,52 +34,21 @@ func main() {
 	db.AddQueryHook(bundebug.NewQueryHook(bundebug.WithVerbose(true)))
 
 	// Repositories
-	repoAccount := account.NewDatabaseRepository(logger, db)
-
-	account, err := repoAccount.FindAccount(context.Background(), "GHM54789345")
-	if err != nil {
-		logger.Errorf("Error in FindAccount: %v", err)
-	}
-
-	logger.Infof("Account: %v", account)
-
-	avgCredit, avgDebit, err := repoAccount.FindMonthlyAverageByTxnType(context.Background(), "GHM54789345")
-	if err != nil {
-		logger.Errorf("Error in FindMonthlyAverageByTxnType: %v", err)
-	}
-
-	logger.Infof("Monthly Average (CREDIT): %f  Monthly Average (DEBIT): %f", avgCredit, avgDebit)
+	repoAccount := accountrepo.NewDatabaseRepository(logger, db)
 
 	// Services
-	//mailSvc := mail.NewDefaultService(logger, &configs.Smtp)  TODO GUNTER TO UNCOMMENT
+	reportSvc := report.NewDefaultService(logger, repoAccount)
+	mailSvc := mail.NewDefaultService(logger, &configs.Smtp)
 
-	var arrTxnCountPerMonth = []model.TxnCountPerMonth{
-		{
-			Month:    "January",
-			TxnCount: 123,
-		},
-		{
-			Month:    "February",
-			TxnCount: 456,
-		},
-		{
-			Month:    "March",
-			TxnCount: 789,
-		},
-	}
-
-	var summaryEmailData = model.SummaryEmail{
-		AccountNumber:       "GHM09238458",
-		TotalBalance:        540.8,
-		AverageCreditAmount: 105.5,
-		AverageDebitAmount:  -56.3,
-		ArrTxnCountPerMonth: arrTxnCountPerMonth,
-	}
-
-	logger.Infof("Summary Email Data: %v", summaryEmailData)
-
-	/*err = mailSvc.SendMail("gunterhm@gmail.com", summaryEmailData)  TODO GUNTER TO UNCOMENT
+	summaryEmailInfo, err := reportSvc.GetSummaryEmailInfo(context.Background(), "GHM54789345")
 	if err != nil {
 		return
-	}*/
+	}
+
+	logger.Infof("Summary Email info %v", summaryEmailInfo)
+
+	err = mailSvc.SendMail("gunterhm@gmail.com", summaryEmailInfo)
+	if err != nil {
+		return
+	}
 }

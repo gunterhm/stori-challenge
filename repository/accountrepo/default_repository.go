@@ -1,5 +1,5 @@
-// Package account contains repository functions
-package account
+// Package accountrepo contains repository functions for accounts in database
+package accountrepo
 
 import (
 	"awesomeProject/model"
@@ -39,7 +39,7 @@ func (r *DatabaseRepository) FindAccount(ctx context.Context, accountID string) 
 	return account, nil
 }
 
-// FindMonthlyAverageByTxnType Finds monthly average by transaction type
+// FindMonthlyAverageByTxnType Finds monthly credit and debit average
 func (r *DatabaseRepository) FindMonthlyAverageByTxnType(ctx context.Context, accountID string) (float64, float64, error) {
 
 	subQuery := r.db.NewSelect().
@@ -64,4 +64,25 @@ func (r *DatabaseRepository) FindMonthlyAverageByTxnType(ctx context.Context, ac
 	}
 
 	return averageCredit, averageDebit, nil
+}
+
+// FindTotalTransactionsPerMonth Finds total transactions per month
+func (r *DatabaseRepository) FindTotalTransactionsPerMonth(ctx context.Context, accountID string) ([]model.TxnCountPerMonth, error) {
+
+	var txnCountPerMonth []model.TxnCountPerMonth
+
+	err := r.db.NewSelect().
+		Model((*model.AccountTransaction)(nil)).
+		ColumnExpr("MONTH(date) AS txn_month").
+		ColumnExpr("COUNT(*) AS txn_count").
+		Where("account_id = ?", accountID).
+		Where("YEAR(date) = YEAR(CURDATE())").
+		GroupExpr("MONTH(date)").
+		Scan(ctx, &txnCountPerMonth)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return txnCountPerMonth, nil
 }
