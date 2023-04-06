@@ -12,7 +12,8 @@ type AccountTransaction struct {
 	AccountID     string    `bun:"account_id,pk"`
 	TransactionID string    `bun:"transaction_id"`
 	Date          time.Time `bun:"date"`
-	Amount        float64   `bun:"amount"`
+	AmountCredit  float64   `bun:"amount_credit"`
+	AmountDebit   float64   `bun:"amount_debit"`
 	Type          string    `bun:"type"`
 	Account       *Account  `bun:"rel:belongs-to,join:account_id=account_id"`
 }
