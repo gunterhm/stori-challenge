@@ -8,7 +8,7 @@ import (
 	"go.uber.org/zap"
 )
 
-// DatabaseRepository  repository implementation
+// DatabaseRepository is an implementation of IRepository
 type DatabaseRepository struct {
 	log *zap.SugaredLogger
 	db  *bun.DB
@@ -104,4 +104,16 @@ func (r *DatabaseRepository) FindTotalBalance(ctx context.Context, accountID str
 	}
 
 	return totalBalance, nil
+}
+
+func (r *DatabaseRepository) SaveAccountTransaction(ctx context.Context, transaction *model.AccountTransaction) error {
+	_, err := r.db.NewInsert().
+		On("DUPLICATE KEY UPDATE").
+		Model(transaction).
+		Exec(ctx)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

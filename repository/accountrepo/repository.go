@@ -11,4 +11,5 @@ type IRepository interface {
 	FindMonthlyAverageByTxnType(ctx context.Context, accountID string) (float64, float64, error)
 	FindTotalTransactionsPerMonth(ctx context.Context, accountID string) ([]model.TxnCountPerMonth, error)
 	FindTotalBalance(ctx context.Context, accountID string) (float64, error)
+	SaveAccountTransaction(ctx context.Context, transaction *model.AccountTransaction) error
 }

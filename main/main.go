@@ -2,7 +2,9 @@ package main
 
 import (
 	"awesomeProject/config"
+	"awesomeProject/repository/accountrepo"
 	"awesomeProject/service/txnprocessor"
+	"context"
 	"database/sql"
 	"github.com/go-co-op/gocron"
 	_ "github.com/go-sql-driver/mysql"
@@ -33,16 +35,16 @@ func main() {
 	db.AddQueryHook(bundebug.NewQueryHook(bundebug.WithVerbose(true)))
 
 	// Repositories
-	/* TODO GUNTER TO UNCOMMENT
 	repoAccount := accountrepo.NewDatabaseRepository(logger, db)
-	*/
 
 	// Services
 	/* TODO GUNTER TO UNCOMMENT
 	reportSvc := report.NewDefaultService(logger, repoAccount)
 	mailSvc := mail.NewDefaultService(logger, &configs.Smtp)
 	*/
-	txnProcessorSvc := txnprocessor.NewDefaultService(logger, configs.TxnProcessing.FileNameRegExp,
+	txnProcessorSvc := txnprocessor.NewDefaultService(logger,
+		repoAccount,
+		configs.TxnProcessing.FileNameRegExp,
 		configs.TxnProcessing.IncomingDir, configs.TxnProcessing.ArchiveDir)
 
 	// Go Cron
@@ -51,7 +53,7 @@ func main() {
 	scheduler.Every(5).Seconds().
 		Do(func() { logger.Infof("TICK!!!!") })
 
-	err = txnProcessorSvc.StartProcess()
+	err = txnProcessorSvc.StartProcess(context.Background())
 	if err != nil {
 		logger.Errorf("Error while calling StartProcess: %v", err)
 	}
