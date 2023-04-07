@@ -53,7 +53,7 @@ func main() {
 	// Go Cron
 	scheduler := gocron.NewScheduler(time.UTC)
 
-	scheduler.Every(5).Seconds().
+	scheduler.Every(configs.Schedule.Seconds).Seconds().
 		Do(func() {
 			err = txnProcessorSvc.StartProcess(context.Background())
 			if err != nil {

@@ -14,6 +14,7 @@ type Configurations struct {
 	Smtp          SmptConfigurations          `koanf:"smtp"`
 	Database      DatabaseConfigurations      `koanf:"database"`
 	TxnProcessing TxnProcessingConfigurations `koanf:"txnprocessing"`
+	Schedule      ScheduleConfigurations      `koanf:"schedule"`
 }
 
 // SmptConfigurations SMPT configurations
@@ -35,6 +36,11 @@ type TxnProcessingConfigurations struct {
 	IncomingDir    string `koanf:"incomingdir"`
 	ArchiveDir     string `koanf:"archivedir"`
 	FileNameRegExp string `koanf:"filenameregexp"`
+}
+
+// ScheduleConfigurations Schedule configurations
+type ScheduleConfigurations struct {
+	Seconds int `koanf:"seconds"`
 }
 
 // LoadConfig Loads configurations depending upon the environment

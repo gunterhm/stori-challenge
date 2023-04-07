@@ -12,3 +12,6 @@ txnprocessing:
   incomingdir: /Users/gunter/stori/incoming
   archivedir: /Users/gunter/stori/archive
   filenameregexp: \d\d\d\d\d\d\d\d_([a-zA-Z0-9]+)\.csv
+
+schedule:
+  seconds: 10
