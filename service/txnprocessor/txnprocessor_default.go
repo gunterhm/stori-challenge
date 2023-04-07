@@ -135,6 +135,11 @@ func (s DefaultService) ProcessTxnFile(ctx context.Context, txnFile *os.DirEntry
 			return err
 		}
 
+		// Check for header row
+		if rec[0] == "Id" {
+			continue
+		}
+
 		// Convert csv entry to AccountTransaction structure
 		accountTransaction, err := mapCsvRecordToAccountTransaction(rec, accountID)
 		if err != nil {
