@@ -3,6 +3,8 @@ package txnprocessor
 import (
 	"awesomeProject/model"
 	"awesomeProject/repository/accountrepo"
+	"awesomeProject/service/mail"
+	"awesomeProject/service/report"
 	"context"
 	"encoding/csv"
 	"errors"
@@ -24,17 +26,23 @@ const (
 type DefaultService struct {
 	log            *zap.SugaredLogger
 	accountRepo    accountrepo.IRepository
+	reportSvc      report.IReport
+	mailSvc        mail.IMailService
 	fileNameRegExp *regexp.Regexp
 	incomingDir    string
 	archiveDir     string
 }
 
 // NewDefaultService creates a new DefaultService
-func NewDefaultService(logger *zap.SugaredLogger, accRepo accountrepo.IRepository, strFileNameRegex string, incDir string, archDir string) *DefaultService {
+func NewDefaultService(logger *zap.SugaredLogger,
+	accRepo accountrepo.IRepository, repSvc report.IReport, mailSvc mail.IMailService,
+	strFileNameRegex string, incDir string, archDir string) *DefaultService {
 	rexExp, _ := regexp.Compile(strFileNameRegex)
 	return &DefaultService{
 		log:            logger,
 		accountRepo:    accRepo,
+		reportSvc:      repSvc,
+		mailSvc:        mailSvc,
 		fileNameRegExp: rexExp,
 		incomingDir:    incDir,
 		archiveDir:     archDir,
@@ -54,6 +62,18 @@ func (s DefaultService) StartProcess(ctx context.Context) error {
 	s.log.Infof("Next File to process: %v", *nextFile)
 
 	err = s.ProcessTxnFile(ctx, nextFile)
+	if err != nil {
+		return err
+	}
+
+	summaryEmailInfo, err := s.reportSvc.GetSummaryEmailInfo(context.Background(), "GHM54789345")
+	if err != nil {
+		return err
+	}
+
+	s.log.Infof("Summary Email info %v", summaryEmailInfo)
+
+	err = s.mailSvc.SendSummaryMail(summaryEmailInfo)
 	if err != nil {
 		return err
 	}

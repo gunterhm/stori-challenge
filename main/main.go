@@ -3,6 +3,8 @@ package main
 import (
 	"awesomeProject/config"
 	"awesomeProject/repository/accountrepo"
+	"awesomeProject/service/mail"
+	"awesomeProject/service/report"
 	"awesomeProject/service/txnprocessor"
 	"context"
 	"database/sql"
@@ -38,12 +40,13 @@ func main() {
 	repoAccount := accountrepo.NewDatabaseRepository(logger, db)
 
 	// Services
-	/* TODO GUNTER TO UNCOMMENT
 	reportSvc := report.NewDefaultService(logger, repoAccount)
 	mailSvc := mail.NewDefaultService(logger, &configs.Smtp)
-	*/
+
 	txnProcessorSvc := txnprocessor.NewDefaultService(logger,
 		repoAccount,
+		reportSvc,
+		mailSvc,
 		configs.TxnProcessing.FileNameRegExp,
 		configs.TxnProcessing.IncomingDir, configs.TxnProcessing.ArchiveDir)
 
@@ -51,25 +54,12 @@ func main() {
 	scheduler := gocron.NewScheduler(time.UTC)
 
 	scheduler.Every(5).Seconds().
-		Do(func() { logger.Infof("TICK!!!!") })
-
-	err = txnProcessorSvc.StartProcess(context.Background())
-	if err != nil {
-		logger.Errorf("Error while calling StartProcess: %v", err)
-	}
-
-	/*  TODO GUNTER TO UNCOMMENT
-	summaryEmailInfo, err := reportSvc.GetSummaryEmailInfo(context.Background(), "GHM54789345")
-	if err != nil {
-		return
-	}
-
-	logger.Infof("Summary Email info %v", summaryEmailInfo)
-
-	err = mailSvc.SendSummaryMail(summaryEmailInfo)
-	if err != nil {
-		return
-	}*/
+		Do(func() {
+			err = txnProcessorSvc.StartProcess(context.Background())
+			if err != nil {
+				logger.Errorf("Error while calling StartProcess: %v", err)
+			}
+		})
 
 	scheduler.StartBlocking()
 }
