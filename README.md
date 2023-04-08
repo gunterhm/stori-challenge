@@ -57,3 +57,11 @@ We will create and run two containers as explained above, one for the applicatio
 - docker build -t stori-challenge .
 - docker run --name stori-challenge --network my_network -d stori-challenge:latest
 
+### Testing the application
+
+This project includes a sample CSV file that can be used to test it. You'll find this file when the stori-challenge container is up.
+
+Using the container terminal change to /app/stori-challenge/sample and there you'll see sample file 20230406_GHM54789345.csv
+
+Copy this file to folder /app/stori-challenge/incoming and wait for the process to take it.
+
