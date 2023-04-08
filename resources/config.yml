@@ -6,11 +6,11 @@ smtp:
   from: gunter@guntercorp.com
 
 database:
-  dsn: stori:1q2w3e@tcp(localhost:3306)/storidb
+  dsn: stori:1q2w3e@tcp(mariadb_stori:3306)/storidb
 
 txnprocessing:
-  incomingdir: /Users/gunter/stori/incoming
-  archivedir: /Users/gunter/stori/archive
+  incomingdir: /app/stori-challenge/csv/incoming
+  archivedir: /app/stori-challenge/csv/archive
   filenameregexp: \d\d\d\d\d\d\d\d_([a-zA-Z0-9]+)\.csv
 
 schedule:

@@ -25,19 +25,3 @@ CREATE TABLE `account_transaction` (
 INSERT INTO `account`
 (account_id, name, email)
 VALUES('GHM54789345', 'Günter Hagedorn', 'gunterhm@gmail.com');
-
-INSERT INTO `account_transaction`
-(account_id, txn_id, amount_credit, amount_debit, `date`)
-VALUES('GHM54789345', 0, 60.5, 0, '2023-07-15 00:00:00.000');
-
-INSERT INTO `account_transaction`
-(account_id, txn_id, amount_credit, amount_debit, `date`)
-VALUES('GHM54789345', 1, 0, -10.3, '2023-07-28 00:00:00.000');
-
-INSERT INTO `account_transaction`
-(account_id, txn_id, amount_credit, amount_debit, `date`)
-VALUES('GHM54789345', 2, 0, -20.46, '2023-08-02 00:00:00.000');
-
-INSERT INTO `account_transaction`
-(account_id, txn_id, amount_credit, amount_debit, `date`)
-VALUES('GHM54789345', 3, 10, 0, '2023-08-13 00:00:00.000');
