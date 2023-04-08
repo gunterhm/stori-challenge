@@ -52,13 +52,14 @@ func (s DefaultService) SendSummaryMail(summaryEmailData *model.SummaryEmail) er
 
 	s.log.Infof("EMail: %s", buffer.String())
 
-	/* TODO GUNTER TO UNCOMMENT
-	d := gomail.NewDialer(s.smtpConfig.Host, s.smtpConfig.Port, s.smtpConfig.User, s.smtpConfig.Password)
+	if s.smtpConfig.SendMail {
+		d := gomail.NewDialer(s.smtpConfig.Host, s.smtpConfig.Port, s.smtpConfig.User, s.smtpConfig.Password)
 
-	// Send the email
-	if err := d.DialAndSend(mail); err != nil {
-		return err
-	} */
+		// Send the email
+		if err := d.DialAndSend(mail); err != nil {
+			return err
+		}
+	}
 
 	return nil
 }

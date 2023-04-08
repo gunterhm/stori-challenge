@@ -24,6 +24,7 @@ type SmptConfigurations struct {
 	User     string `koanf:"user"`
 	Password string `koanf:"password"`
 	From     string `koanf:"from"`
+	SendMail bool   `koanf:"sendmail"`
 }
 
 // DatabaseConfigurations Database configurations

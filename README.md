@@ -15,5 +15,7 @@ docker exec -i mariadb_stori mariadb -ustori -p1q2w3e storidb < resources/initia
 
 RUN APPLICATION IN DOCKER CONTAINER
 
-docker build -t app .
+docker build -t stori-challenge .
+
+docker run --name stori-challenge --network my_network -d stori-challenge:latest
 
